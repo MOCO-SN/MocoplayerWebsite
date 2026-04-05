@@ -1,21 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+include "db.php";
 
-$host = "127.0.0.1";
-$user = "u807707365_mocoplayer";
-$pass = "Sachin34241@@";
-$db   = "u807707365_mocoplayerside";
-
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    die(json_encode(["status" => "error", "message" => "Connection failed"]));
-}
-
-$conn->set_charset("utf8mb4");
-
-// Create videos table
 $conn->query("CREATE TABLE IF NOT EXISTS videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -28,6 +13,14 @@ $conn->query("CREATE TABLE IF NOT EXISTS videos (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )");
 
-echo json_encode(["status" => "success", "message" => "Videos table created successfully"]);
-$conn->close();
+$result = $conn->query("SELECT COUNT(*) as cnt FROM videos");
+$row = $result->fetch_assoc();
+
+if ($row['cnt'] == 0) {
+    $conn->query("INSERT INTO videos (title, description, video_url, thumbnail_url) VALUES 
+        ('Sample Video 1', 'This is a test video', 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', 'https://via.placeholder.com/320x180'),
+        ('Sample Video 2', 'Another test video', 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_2mb.mp4', 'https://via.placeholder.com/320x180')");
+}
+
+echo json_encode(["status" => "success", "message" => "Setup complete"]);
 ?>
