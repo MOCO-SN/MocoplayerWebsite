@@ -67,7 +67,7 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
       ===================================================== */}
       <header className="home-header">
         <div className="header-logo">
-          <span className="logo-box">M</span>
+          <img src="/mocoplayer.png" alt="Moco Player" className="logo-box" />
           <span className="brand-name">Moco Player</span>
         </div>
 
@@ -356,7 +356,7 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
       <footer className="home-footer">
         <div className="footer-content">
           <div className="footer-brand">
-            <span className="logo-box">M</span>
+            <img src="/mocoplayer.png" alt="Moco Player" className="logo-box" />
             <span>Moco Player</span>
           </div>
 

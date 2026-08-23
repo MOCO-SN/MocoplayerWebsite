@@ -10,8 +10,8 @@ export default function CloudinaryUploader({ onUploaded }) {
   }, [onUploaded]);
 
   useEffect(() => {
-    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+    const cloudName = "dpgyfh39j";
+    const uploadPreset = "mocoplayer-slider";
 
     if (!cloudName || !uploadPreset || !window.cloudinary) return;
 

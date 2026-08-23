@@ -203,7 +203,7 @@ export default function App() {
 
         <header className="topbar">
           <div className="mobile-brand">
-            <b>M</b>
+            <img src="/mocoplayer.png" alt="Moco Player" className="mobile-logo" />
             <span>Moco Manager</span>
           </div>
 

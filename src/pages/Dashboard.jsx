@@ -90,7 +90,7 @@ export default function Dashboard({ sliders = [], updates = [] }) {
                 padding: "12px",
                 borderRadius: "10px",
                 border: "1px solid #242529",
-                background: "#0c0d0f"
+                background: "#ffffff"
               }}>
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>

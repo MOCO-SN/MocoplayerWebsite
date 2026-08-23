@@ -35,7 +35,7 @@ export default function Sidebar({ page, setPage, onLogout }) {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="brand-mark">M</div>
+        <img src="/mocoplayer.png" alt="Moco Player" className="brand-mark" />
 
         <div>
           <strong>Moco Player</strong>

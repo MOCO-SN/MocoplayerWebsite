@@ -27,7 +27,7 @@ export default function Login({ onBackToHome }) {
       <div className="login-glow glow-two" />
 
       <form className="login-card" onSubmit={submit}>
-        <div className="login-logo">M</div>
+        <img src="/mocoplayer.png" alt="Moco Player" className="login-logo" />
         <span className="eyebrow"><ShieldCheck size={14} /> ADMIN ACCESS</span>
         <h1>Moco Player<br /><span>Manager</span></h1>
         <p>Manage banners and remote content for your Moco Player app.</p>
