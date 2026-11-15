@@ -14,6 +14,14 @@ import {
   RefreshCw,
   Zap,
   Smartphone,
+  CheckCircle2,
+  ArrowRight,
+  HardDrive,
+  Wifi,
+  Radio,
+  Mail,
+  Menu,
+  X,
 } from "lucide-react";
 import "./Home.css";
 
@@ -22,6 +30,22 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
   const activeUpdates = updates.filter((u) => u.active !== false);
   const latestRelease = activeUpdates[0];
   const previousReleases = activeUpdates.slice(1);
+
+  const [activeTab, setActiveTab] = useState("home");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const scrollToTab = (tabId) => {
+    setActiveTab(tabId);
+    setMobileMenuOpen(false);
+    if (tabId === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const element = document.getElementById(tabId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   /* =========================================================
      SLIDER CAROUSEL STATE
@@ -63,18 +87,56 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
       <div className="bg-glow bg-glow-3" />
 
       {/* =====================================================
-          HEADER
+          HEADER (DOCK)
       ===================================================== */}
       <header className="home-header">
-        <div className="header-logo">
+        <div
+          className="header-logo"
+          onClick={() => scrollToTab("home")}
+          style={{ cursor: "pointer" }}
+        >
           <img src="/mocoplayer.png" alt="Moco Player" className="logo-box" />
           <span className="brand-name">Moco Player</span>
         </div>
 
         <nav className="header-nav">
-          <a href="#features">Features</a>
-          <a href="#download">Download</a>
-          {activeUpdates.length > 0 && <a href="#changelog">Updates</a>}
+          <button
+            type="button"
+            onClick={() => scrollToTab("home")}
+            className={activeTab === "home" ? "nav-link-btn active" : "nav-link-btn"}
+          >
+            Home
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToTab("features")}
+            className={activeTab === "features" ? "nav-link-btn active" : "nav-link-btn"}
+          >
+            Features
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToTab("download")}
+            className={activeTab === "download" ? "nav-link-btn active" : "nav-link-btn"}
+          >
+            Download
+          </button>
+          {activeUpdates.length > 0 && (
+            <button
+              type="button"
+              onClick={() => scrollToTab("changelog")}
+              className={activeTab === "changelog" ? "nav-link-btn active" : "nav-link-btn"}
+            >
+              Updates
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => scrollToTab("privacy")}
+            className={activeTab === "privacy" ? "nav-link-btn active" : "nav-link-btn"}
+          >
+            Privacy Policy
+          </button>
         </nav>
 
         <div className="header-actions">
@@ -106,8 +168,101 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
               <span>Admin Login</span>
             </button>
           )}
+          {/* MOBILE MENU TOGGLE */}
+          <button
+            type="button"
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
         </div>
       </header>
+
+      {/* MOBILE DROPDOWN DOCK MENU */}
+      {mobileMenuOpen && (
+        <div
+          className="mobile-dock-overlay"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            className="mobile-dock-dropdown"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className={activeTab === "home" ? "mobile-nav-item active" : "mobile-nav-item"}
+              onClick={() => scrollToTab("home")}
+            >
+              <Smartphone size={16} />
+              <span>Home</span>
+            </button>
+            <button
+              type="button"
+              className={activeTab === "features" ? "mobile-nav-item active" : "mobile-nav-item"}
+              onClick={() => scrollToTab("features")}
+            >
+              <SlidersIcon size={16} />
+              <span>Features</span>
+            </button>
+            <button
+              type="button"
+              className={activeTab === "download" ? "mobile-nav-item active" : "mobile-nav-item"}
+              onClick={() => scrollToTab("download")}
+            >
+              <Download size={16} />
+              <span>Download</span>
+            </button>
+            {activeUpdates.length > 0 && (
+              <button
+                type="button"
+                className={activeTab === "changelog" ? "mobile-nav-item active" : "mobile-nav-item"}
+                onClick={() => scrollToTab("changelog")}
+              >
+                <RefreshCw size={16} />
+                <span>Updates</span>
+              </button>
+            )}
+            <button
+              type="button"
+              className={activeTab === "privacy" ? "mobile-nav-item active" : "mobile-nav-item"}
+              onClick={() => scrollToTab("privacy")}
+            >
+              <Shield size={16} />
+              <span>Privacy Policy</span>
+            </button>
+
+            <div className="mobile-nav-divider" />
+
+            {user ? (
+              <button
+                type="button"
+                className="mobile-nav-item"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setPage("dashboard");
+                }}
+              >
+                <Lock size={16} />
+                <span>Dashboard</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="mobile-nav-item"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setPage("login");
+                }}
+              >
+                <Lock size={16} />
+                <span>Admin Login</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* =====================================================
           HERO & SLIDER SECTION
@@ -351,6 +506,149 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
       )}
 
       {/* =====================================================
+          PRIVACY POLICY SECTION (IN HOME PAGE)
+      ===================================================== */}
+      <section id="privacy" className="home-privacy-section">
+        <div className="section-header">
+          <span className="eyebrow">PRIVACY POLICY</span>
+          <h2>Your Privacy is Respected</h2>
+          <p>Moco Player is built around user privacy with local-first media playback and zero personal data tracking.</p>
+        </div>
+
+        <div className="privacy-card" style={{ maxWidth: "1000px", margin: "0 auto" }}>
+          {/* QUICK HIGHLIGHTS */}
+          <div className="privacy-highlights">
+            <div className="highlight-item">
+              <CheckCircle2 size={18} className="highlight-icon" />
+              <div>
+                <strong>Zero Personal Tracking</strong>
+                <p>We do not collect names, phone numbers, browsing history, or personal profiles.</p>
+              </div>
+            </div>
+            <div className="highlight-item">
+              <CheckCircle2 size={18} className="highlight-icon" />
+              <div>
+                <strong>Local-First Storage</strong>
+                <p>Your video and audio files stay on your device and are never uploaded to any server.</p>
+              </div>
+            </div>
+            <div className="highlight-item">
+              <CheckCircle2 size={18} className="highlight-icon" />
+              <div>
+                <strong>No Ad Network Profiling</strong>
+                <p>No intrusive third-party advertising SDKs or tracking scripts are bundled with the player.</p>
+              </div>
+            </div>
+          </div>
+
+          <hr className="privacy-divider" />
+
+          {/* SECTION 1 */}
+          <div className="policy-section">
+            <h2>1. Introduction & Scope</h2>
+            <p>
+              This Privacy Policy applies to the <strong>Moco Player</strong> Android Application and this <strong>Moco Player Website & Management Portal</strong>. We believe your media entertainment should be private, fast, and secure.
+            </p>
+          </div>
+
+          {/* SECTION 2 */}
+          <div className="policy-section">
+            <h2>2. Information We Do NOT Collect</h2>
+            <p>
+              For users of the Moco Player Android application:
+            </p>
+            <ul>
+              <li>We do <strong>not</strong> collect your personal details, email address, phone number, or device contacts.</li>
+              <li>We do <strong>not</strong> read, copy, or upload your local media files. Playback happens strictly on your device hardware.</li>
+              <li>We do <strong>not</strong> record your local watch history or upload playlists to any remote server.</li>
+              <li>We do <strong>not</strong> sell, rent, or monetize your personal data.</li>
+            </ul>
+          </div>
+
+          {/* SECTION 3 */}
+          <div className="policy-section">
+            <h2>3. Android App Permissions & Why They Are Needed</h2>
+            <p>
+              To provide 4K hardware-accelerated playback and background audio, Moco Player requests these Android permissions:
+            </p>
+
+            <div className="permissions-grid">
+              <div className="permission-item">
+                <div className="perm-header">
+                  <HardDrive size={18} />
+                  <strong>Storage & Media Access</strong>
+                </div>
+                <code>READ_MEDIA_VIDEO / READ_MEDIA_AUDIO</code>
+                <p>
+                  Enables scanning and playing your local video and music files stored on internal memory or SD cards.
+                </p>
+              </div>
+
+              <div className="permission-item">
+                <div className="perm-header">
+                  <Wifi size={18} />
+                  <strong>Internet & Network State</strong>
+                </div>
+                <code>INTERNET / ACCESS_NETWORK_STATE</code>
+                <p>
+                  Used solely to check for official app updates, load promotional banners, and stream media URLs you provide.
+                </p>
+              </div>
+
+              <div className="permission-item">
+                <div className="perm-header">
+                  <Radio size={18} />
+                  <strong>Foreground Audio Service</strong>
+                </div>
+                <code>FOREGROUND_SERVICE_MEDIA_PLAYBACK</code>
+                <p>
+                  Allows audio and music playback to continue smoothly when your screen is locked or while multitasking.
+                </p>
+              </div>
+
+              <div className="permission-item">
+                <div className="perm-header">
+                  <Tv size={18} />
+                  <strong>Picture-in-Picture (PiP)</strong>
+                </div>
+                <code>SYSTEM_ALERT_WINDOW / PIP</code>
+                <p>
+                  Enables a floating mini-player window so you can watch videos while using other apps.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 4 */}
+          <div className="policy-section">
+            <h2>4. Remote Content & Infrastructure</h2>
+            <p>
+              We use trusted cloud infrastructure for app delivery:
+            </p>
+            <ul>
+              <li><strong>Firebase Realtime Database:</strong> Delivers remote banner configurations and version release logs. No viewer identities are collected.</li>
+              <li><strong>Cloudinary CDN:</strong> Hosts optimized promotional banner images and release assets.</li>
+            </ul>
+          </div>
+
+          {/* SECTION 5 */}
+          <div className="policy-section contact-section">
+            <h2>5. Contact & Inquiries</h2>
+            <p>
+              If you have any questions or feedback regarding this Privacy Policy, please contact our team:
+            </p>
+            <div className="contact-card">
+              <Mail size={18} />
+              <div>
+                <strong>Support & Inquiries</strong>
+                <p>Email: <a href="mailto:support@mocoplayer.com">support@mocoplayer.com</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================
           FOOTER
       ===================================================== */}
       <footer className="home-footer">
@@ -365,8 +663,34 @@ export default function Home({ user, setPage, sliders = [], updates = [] }) {
           </p>
 
           <div className="footer-links">
-            <a href="#features">Features</a>
-            <a href="#download">Download</a>
+            <button
+              type="button"
+              onClick={() => scrollToTab("home")}
+              className="admin-footer-link"
+            >
+              Home
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToTab("features")}
+              className="admin-footer-link"
+            >
+              Features
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToTab("download")}
+              className="admin-footer-link"
+            >
+              Download
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToTab("privacy")}
+              className="admin-footer-link"
+            >
+              Privacy Policy
+            </button>
             <button onClick={() => setPage("login")} className="admin-footer-link">
               Admin Access
             </button>

@@ -527,7 +527,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 @media (max-width: 680px) {
   .sidebar { position: fixed; width: 100%; height: 60px; inset: auto 0 0; padding: 7px; border-right: 0; border-top: 1px solid var(--color-border); flex-direction: row; background: var(--color-bg-card); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
   .brand, .logout { display: none; }
-  .sidebar nav { width: 100%; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .sidebar nav { width: 100%; grid-template-columns: repeat(6, 1fr); gap: 2px; }
   .nav-item { justify-content: center; flex-direction: column; gap: 2px; padding: 6px; font-size: 9px; text-align: center; }
   .main { margin-left: 0; width: 100%; padding-bottom: 60px; }
   .topbar { padding: 0 17px; justify-content: space-between; }

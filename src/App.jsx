@@ -11,6 +11,7 @@ import { subscribeSliders } from "./firebase/sliders";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Dashboard from "./pages/Dashboard";
 import Sliders from "./pages/Sliders";
 import Updates from "./pages/Updates";
@@ -31,7 +32,16 @@ export default function App() {
      NAVIGATION
   ========================================================= */
 
-  const [page, setPage] = useState("home");
+  const [page, setPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const path = (window.location.pathname || "").toLowerCase();
+      const hash = (window.location.hash || "").toLowerCase();
+      if (path.includes("privacy") || hash.includes("privacy")) {
+        return "privacy";
+      }
+    }
+    return "home";
+  });
 
   /* =========================================================
      SLIDERS
@@ -125,7 +135,7 @@ export default function App() {
         setPage("dashboard");
       }
     } else {
-      if (page !== "home" && page !== "login") {
+      if (page !== "home" && page !== "login" && page !== "privacy") {
         setPage("login");
       }
     }
@@ -163,6 +173,16 @@ export default function App() {
         setPage={setPage}
         sliders={sliders}
         updates={updates}
+      />
+    );
+  }
+
+  // Public Privacy Policy Page (accessible to everyone)
+  if (page === "privacy") {
+    return (
+      <PrivacyPolicy
+        user={user}
+        setPage={setPage}
       />
     );
   }
@@ -207,13 +227,20 @@ export default function App() {
             <span>Moco Manager</span>
           </div>
 
-          <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <button
               onClick={() => setPage("home")}
               className="secondary"
               style={{ padding: "6px 12px", minHeight: "auto", fontSize: "12px", borderRadius: "8px" }}
             >
-              View Home Page
+              Home Page
+            </button>
+            <button
+              onClick={() => setPage("privacy")}
+              className="secondary"
+              style={{ padding: "6px 12px", minHeight: "auto", fontSize: "12px", borderRadius: "8px" }}
+            >
+              Privacy Policy
             </button>
             <div className="connection">
               <span className="connection-dot" />

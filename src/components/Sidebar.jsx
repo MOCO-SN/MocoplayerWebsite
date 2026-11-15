@@ -1,15 +1,22 @@
 import React from "react";
 
 import {
+  Home,
   Image,
   LayoutDashboard,
   LogOut,
   Settings,
   RefreshCw,
+  Shield,
 } from "lucide-react";
 
 export default function Sidebar({ page, setPage, onLogout }) {
   const items = [
+    {
+      id: "home",
+      label: "Home Page",
+      icon: Home,
+    },
     {
       id: "dashboard",
       label: "Dashboard",
@@ -29,6 +36,11 @@ export default function Sidebar({ page, setPage, onLogout }) {
       id: "settings",
       label: "Settings",
       icon: Settings,
+    },
+    {
+      id: "privacy",
+      label: "Privacy Policy",
+      icon: Shield,
     },
   ];
 
