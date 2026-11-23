@@ -16,7 +16,29 @@ import {
   toggleUpdateActive,
 } from "../firebase/updates";
 
-export default function Updates({ updates = [] }) {
+function getFirebaseErrorMessage(error, defaultMsg) {
+  const errMsg = (error?.message || "").toLowerCase();
+  const errCode = (error?.code || "").toLowerCase();
+
+  if (
+    errCode === "permission_denied" ||
+    errMsg.includes("permission_denied") ||
+    errMsg.includes("permission denied")
+  ) {
+    return (
+      "Permission denied by Firebase Realtime Database.\n\n" +
+      "Your Firebase account does not have write access to updates. Please ensure your database rules allow write access to authenticated users."
+    );
+  }
+
+  if (error?.message) {
+    return `${defaultMsg}\n\nDetails: ${error.message}`;
+  }
+
+  return defaultMsg;
+}
+
+export default function Updates({ updates = [], user }) {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
@@ -59,13 +81,17 @@ export default function Updates({ updates = [] }) {
   };
 
   const save = async (data) => {
-    if (editing) {
-      await updateAppUpdate(editing.id, data);
-    } else {
-      await createUpdate(data);
+    try {
+      if (editing) {
+        await updateAppUpdate(editing.id, data);
+      } else {
+        await createUpdate(data);
+      }
+      closeForm();
+    } catch (error) {
+      console.error(error);
+      alert(getFirebaseErrorMessage(error, "Failed to save update."));
     }
-
-    closeForm();
   };
 
   const remove = async (update) => {
@@ -79,7 +105,7 @@ export default function Updates({ updates = [] }) {
       await deleteUpdate(update.id);
     } catch (error) {
       console.error(error);
-      alert("Failed to delete update.");
+      alert(getFirebaseErrorMessage(error, "Failed to delete update."));
     }
   };
 
@@ -90,7 +116,7 @@ export default function Updates({ updates = [] }) {
       await toggleUpdateActive(update.id, !currentActive);
     } catch (error) {
       console.error("Failed to toggle update:", error);
-      alert("Failed to update status.");
+      alert(getFirebaseErrorMessage(error, "Failed to update status."));
     }
   };
 

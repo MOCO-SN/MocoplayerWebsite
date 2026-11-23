@@ -96,8 +96,8 @@ export default function App() {
 
         const list = Object.entries(data).map(
           ([id, value]) => ({
-            id,
             ...value,
+            id,
           })
         );
 
@@ -268,6 +268,7 @@ export default function App() {
           {page === "sliders" && (
             <Sliders
               sliders={sliders}
+              user={user}
             />
           )}
 
@@ -276,13 +277,16 @@ export default function App() {
           {page === "updates" && (
             <Updates
               updates={updates}
+              user={user}
             />
           )}
 
           {/* SETTINGS */}
 
           {page === "settings" && (
-            <Settings />
+            <Settings
+              user={user}
+            />
           )}
         </section>
       </main>

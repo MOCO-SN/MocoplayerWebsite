@@ -1,0 +1,58 @@
+{
+  "rules": {
+    "sliders": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).child('role').val() == 'admin'",
+      "$sliderId": {
+        ".validate": "newData.hasChildren(['imageUrl', 'active', 'position'])",
+        "imageUrl": {
+          ".validate": "newData.isString()"
+        },
+        "active": {
+          ".validate": "newData.isBoolean()"
+        },
+        "position": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+
+    "updates": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).child('role').val() == 'admin'"
+    },
+
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": false
+      }
+    },
+
+    "apps": {
+      ".read": true,
+      ".write": true,
+      "$appId": {
+        ".validate": "newData.hasChildren(['name', 'description', 'iconUrl', 'apkUrl'])",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "description": {
+          ".validate": "newData.isString()"
+        },
+        "iconUrl": {
+          ".validate": "newData.isString()"
+        },
+        "apkUrl": {
+          ".validate": "newData.isString()"
+        },
+        "views": {
+          ".validate": "newData.isNumber()"
+        },
+        "likes": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    }
+  }
+}

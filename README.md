@@ -21,23 +21,32 @@ Enable:
 2. Email/Password provider
 3. Realtime Database
 
-Create your admin user in Firebase Authentication.
+Create your admin user in Firebase Authentication (Users tab).
 
-Then create this Realtime Database entry:
+Then, go to Firebase Console -> **Realtime Database** -> **Rules** tab, and paste the rules from `firebase.rules.json`:
 
 ```json
 {
-  "admins": {
-    "YOUR_FIREBASE_AUTH_UID": {
-      "role": "admin"
+  "rules": {
+    "sliders": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "updates": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "admins": {
+      ".read": "auth != null",
+      ".write": "auth != null"
     }
   }
 }
 ```
 
-Apply `firebase.rules.json` as your Realtime Database rules.
+The `sliders` and `updates` nodes are readable without authentication so the Android app and website can fetch banners and updates. Writes are restricted to authenticated administrator accounts (`auth != null`).
 
-The `sliders` node is intentionally readable without authentication because the Android app needs to load public slider data. Writes are restricted to authenticated Firebase users whose UID is present under `/admins/{uid}` with role `admin`.
+If you prefer strict role-based access, add your admin UID under `/admins/{YOUR_UID}` with `{"role": "admin"}`. You can easily view and copy your UID from the **Settings** page inside the manager.
 
 ## 2. Cloudinary setup
 

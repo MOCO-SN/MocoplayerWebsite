@@ -4,6 +4,7 @@ import {
   Plus,
   Search,
   Image as ImageIcon,
+  AlertTriangle,
 } from "lucide-react";
 
 import SliderCard from "../components/SliderCard";
@@ -16,10 +17,36 @@ import {
   updateSlider,
 } from "../firebase/sliders";
 
-export default function Sliders({ sliders = [] }) {
+function getFirebaseErrorMessage(error, defaultMsg) {
+  const errMsg = (error?.message || "").toLowerCase();
+  const errCode = (error?.code || "").toLowerCase();
+
+  if (
+    errCode === "permission_denied" ||
+    errMsg.includes("permission_denied") ||
+    errMsg.includes("permission denied")
+  ) {
+    return (
+      "Permission denied by Firebase Realtime Database.\n\n" +
+      "Your Firebase account does not have write access to sliders. Please ensure that:\n" +
+      "1. You are properly signed in with your administrator account.\n" +
+      "2. Your Firebase Realtime Database rules allow write access to authenticated users (see 'firebase.rules.json').\n" +
+      "3. If using role-based rules, your User UID must be added under '/admins' in the Firebase Console."
+    );
+  }
+
+  if (error?.message) {
+    return `${defaultMsg}\n\nDetails: ${error.message}`;
+  }
+
+  return defaultMsg;
+}
+
+export default function Sliders({ sliders = [], user }) {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
+  const [togglingId, setTogglingId] = useState(null);
 
   /* =========================================================
      FILTER SLIDERS
@@ -93,7 +120,7 @@ export default function Sliders({ sliders = [] }) {
       closeForm();
     } catch (error) {
       console.error("Failed to save slider:", error);
-      alert("Failed to save slider. Please try again.");
+      alert(getFirebaseErrorMessage(error, "Failed to save slider. Please try again."));
     }
   };
 
@@ -116,7 +143,7 @@ export default function Sliders({ sliders = [] }) {
       await deleteSlider(slider.id);
     } catch (error) {
       console.error("Failed to delete slider:", error);
-      alert("Failed to delete slider. Please try again.");
+      alert(getFirebaseErrorMessage(error, "Failed to delete slider. Please try again."));
     }
   };
 
@@ -125,14 +152,24 @@ export default function Sliders({ sliders = [] }) {
   ========================================================= */
 
   const toggle = async (slider) => {
+    if (!slider || !slider.id) {
+      alert("Failed to update slider: Slider ID is missing.");
+      return;
+    }
+
+    const nextActive = !slider.active;
+
     try {
+      setTogglingId(slider.id);
       await updateSlider(slider.id, {
-        active: !slider.active,
+        active: nextActive,
         updatedAt: Date.now(),
       });
     } catch (error) {
       console.error("Failed to update slider:", error);
-      alert("Failed to update slider.");
+      alert(getFirebaseErrorMessage(error, `Failed to update slider "${slider.title || 'banner'}".`));
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -161,7 +198,7 @@ export default function Sliders({ sliders = [] }) {
       await reorderSliders(next);
     } catch (error) {
       console.error("Failed to reorder sliders:", error);
-      alert("Failed to reorder sliders.");
+      alert(getFirebaseErrorMessage(error, "Failed to reorder sliders."));
     }
   };
 
@@ -199,6 +236,24 @@ export default function Sliders({ sliders = [] }) {
           <span>Add slider</span>
         </button>
       </div>
+
+      {!user && (
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "12px 16px",
+          marginBottom: "16px",
+          borderRadius: "12px",
+          background: "rgba(234, 88, 12, 0.1)",
+          border: "1px solid rgba(234, 88, 12, 0.25)",
+          color: "#ea580c",
+          fontSize: "13px"
+        }}>
+          <AlertTriangle size={18} />
+          <span>You are not signed in. Any slider updates or changes will be rejected by Firebase.</span>
+        </div>
+      )}
 
       {/* =====================================================
           SLIDER FORM
@@ -249,6 +304,7 @@ export default function Sliders({ sliders = [] }) {
             key={slider.id}
             slider={slider}
             index={index}
+            isToggling={togglingId === slider.id}
             onEdit={edit}
             onDelete={remove}
             onToggle={toggle}

@@ -27,8 +27,8 @@ export function subscribeSliders(callback) {
 
       const list = Object.entries(data).map(
         ([id, value]) => ({
-          id,
           ...value,
+          id,
         })
       );
 
@@ -179,11 +179,11 @@ export async function reorderSliders(
     sliders.forEach(
       (slider, index) => {
         updates[
-          `sliders/${slider.id}/position`
+          `${slider.id}/position`
         ] = index + 1;
 
         updates[
-          `sliders/${slider.id}/updatedAt`
+          `${slider.id}/updatedAt`
         ] = Date.now();
       }
     );
@@ -193,7 +193,7 @@ export async function reorderSliders(
     }
 
     await update(
-      ref(db),
+      slidersRef,
       updates
     );
   } catch (error) {
