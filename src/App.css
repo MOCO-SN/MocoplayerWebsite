@@ -9,7 +9,7 @@
   --color-bg-subtle: #f0f4f8;
   --color-bg-card: #ffffff;
   --color-text: #1e293b;
-  --color-text-muted: #94a3b8;
+  --color-text-muted: #d1d7df;
   --color-border: #e2e8f0;
   --color-border-hover: #cbd5e1;
   --color-primary: #2563eb;
@@ -66,7 +66,12 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   place-items: center;
   position: relative;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 15%, #eff6ff 0, #f8fafc 65%);
+  background-image: url(https://img-new.cgtrader.com/items/7119651/85b803004e/360-degree-16k-hdri-space-background-sn-3859-3d-model-85b803004e.webp);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-clip: border-box;
+  background-position: center;
+  /* background: radial-gradient(circle at 50% 15%, #eff6ff1c 0, #f8fafc1b 65%); */
 }
 
 .login-glow {
@@ -86,8 +91,9 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   padding: 40px;
   border: 1px solid var(--color-border);
   border-radius: 28px;
-  background: var(--color-bg-card);
+  background: rgba(241, 241, 241, 0.31);
   box-shadow: 0 10px 40px var(--color-shadow);
+  backdrop-filter: blur(10px);
   z-index: 10;
 }
 
@@ -102,7 +108,6 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   height: 48px;
   border-radius: 14px;
   margin-bottom: 25px;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 .mobile-brand { display: none; }
@@ -156,6 +161,11 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .login-button { width: 100%; margin-top: 18px; }
 .error-box { margin-top: 12px; padding: 11px 13px; border-radius: 10px; background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.15); color: var(--color-danger); font-size: 13px; }
 
+
+.secondary{
+  padding: 10px 10px 10px;
+  border-radius: 10px;
+}
 /* =====================================================
     SHELL & SIDEBAR
 ==================================================== */
@@ -180,7 +190,6 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   height: 36px;
   border-radius: 11px;
   font-size: 16px;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 .brand strong, .brand span { display: block; }
 .brand strong { font-size: 14px; color: var(--color-text); font-weight: 700; }
